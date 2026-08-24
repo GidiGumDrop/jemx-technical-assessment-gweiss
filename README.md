@@ -1,6 +1,6 @@
 # Overtime early warning — Jem technical assessment
 
-**Dashboard:** 154.65.109.55:8089
+**Dashboard:** http://154.65.109.55:8089
 **Video:** https://www.loom.com/share/457dbb4b54704d0281a6aabd21b136a2
 
 ## Required files

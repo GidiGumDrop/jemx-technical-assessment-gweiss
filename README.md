@@ -14,5 +14,5 @@
 - **[notebooks/eda.ipynb](notebooks/eda.ipynb)** — what the data supports
 - **[notebooks/model_evaluation.ipynb](notebooks/model_evaluation.ipynb)** — the model against the naive baseline, and where it fails
 - **[notebooks/note_classifier.ipynb](notebooks/note_classifier.ipynb)** — Naive Bayes vs keyword rules, on notes neither had seen
-- **[docs/decisions.md](docs/decisions.md)** — every decision, in detail
-- **[docs/brief.md](docs/brief.md)** — the original brief
+
+- All source code is in src/

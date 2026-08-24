@@ -1,0 +1,8 @@
+.venv/
+.git/
+__pycache__/
+*.pyc
+notebooks/
+outputs/
+*.db
+*.db.staging-*

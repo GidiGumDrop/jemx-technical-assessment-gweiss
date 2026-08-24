@@ -1,0 +1,61 @@
+note,true_category,why_it_is_hard
+"waited past midnight for my replacement, never showed up",relief_no_show,novel phrasing
+"graveyard guy phoned to say he wasnt coming so i stayed",relief_no_show,slang for night shift
+"oncoming shift was a no-show",relief_no_show,hyphenated
+"had to double back because nobody rocked up at 6",relief_no_show,SA idiom
+"die aflosser het my in die steek gelaat",relief_no_show,Afrikaans not in lexicon
+"second shift never materialised so i carried on",relief_no_show,formal register
+"no one turned up to take over from me",relief_no_show,paraphrase
+"my swop didnt arrive, worked straight through",relief_no_show,SA usage swop
+"filled in for thabo, he is at a funeral",absence_cover,filled in not covered
+"did both posts myself, mkhize off with flu",absence_cover,both posts not 2 posts
+"ran the whole floor alone, my partner is on leave",absence_cover,implicit
+"stepped in for the day shift lady, death in the family",absence_cover,stepped in
+"ek het vir pieter ingestaan, hy is siek",absence_cover,Afrikaans ingestaan
+"carried sipho duties as well, he is off today",absence_cover,carried duties
+"worked two areas because dlamini is on maternity",absence_cover,maternity unseen
+"solo tonight, the other guy is suspended",absence_cover,solo
+"sat waiting for the keys for 40 minutes",late_handover,keys but not keys missing
+"changeover took forever, register not signed",late_handover,changeover
+"the takeover was an hour late",late_handover,takeover
+"hung around because the previous shift hadnt finished paperwork",late_handover,paraphrase
+"sleutels was weg, moes wag",late_handover,Afrikaans keys gone
+"briefing ran long, could not leave on time",late_handover,briefing
+"outgoing officer arrived late to brief me",late_handover,outgoing officer
+"stuck at the post until the day team signed the log",late_handover,log not book
+"the polisher packed up so everything took longer",equipment_failure,packed up
+"compressor died halfway through the shift",equipment_failure,died
+"aircon plant tripped, stayed to reset it",equipment_failure,tripped
+"the vacuum stopped working so i swept the area",equipment_failure,stopped working
+"water pump gave in, carried buckets instead",equipment_failure,gave in
+"trolley wheels seized, moved stock one at a time",equipment_failure,seized
+"elektrisiteit af, alles het stadig gegaan",equipment_failure,Afrikaans power off
+"boom was jammed shut, opened each vehicle myself",equipment_failure,jammed
+"tenant asked us to stay for the delivery, authorised",client_requested,tenant not client
+"building owner wanted extra hands for the function, greenlit by head office",client_requested,greenlit
+"mall management booked us for the after-hours count, all cleared",client_requested,mall management
+"customer requested additional guarding, ok from ops",client_requested,customer
+"die huurder het gevra ons bly langer, goedgekeur",client_requested,Afrikaans tenant
+"shopping centre asked for two more men, authorised in writing",client_requested,shopping centre
+"landlord arranged overtime for the refit, confirmed",client_requested,landlord
+"requested by the tenant for the audit prep, sanctioned",client_requested,sanctioned
+"tenant says stay till morning, no idea if ops agreed",client_requested_unapproved,no idea
+"building manager asked us to remain, nothing in writing",client_requested_unapproved,nothing in writing
+"they want us here longer but nobody has authorised it",client_requested_unapproved,nobody authorised
+"asked to stay by the shop owner, havent heard from office",client_requested_unapproved,havent heard
+"mall says extend the shift, unsure whether thats sanctioned",client_requested_unapproved,unsure
+"customer wants overnight cover, still waiting on head office",client_requested_unapproved,waiting on
+"die bestuurder wil he ons bly, weet nie of dis goedgekeur nie",client_requested_unapproved,Afrikaans unapproved
+"instructed by tenant to stay on, no authorisation received",client_requested_unapproved,no authorisation
+"niks",no_information,Afrikaans nothing
+"geen probleme",no_information,Afrikaans no problems
+"kulungile",no_information,isiZulu it is fine
+"shift was uneventful",no_information,uneventful
+"nothing much happened",no_information,paraphrase
+"standard evening",no_information,terse
+"zzz",no_information,junk
+"n/a nothing to add",no_information,junk
+"tenant signed the extra hours but honestly it was because nobody relieved me",relief_no_show,contrastive
+"management approved the overtime though the real story is the polisher broke",equipment_failure,contrastive
+"billed to the client but truthfully we were short-staffed all night",absence_cover,contrastive
+"client put it in writing however the actual cause was the late changeover",late_handover,contrastive

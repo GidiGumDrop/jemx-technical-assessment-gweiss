@@ -1,0 +1,403 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overtime ops room</title>
+<style>
+  :root { --line:#dcdcdc; --muted:#5f6b78; --over:#b32d1f; --close:#b8791a; --watch:#6b7885; --ok:#1f7a4d; --ink:#17191c; }
+  * { box-sizing:border-box; }
+  body { font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; margin:0; color:var(--ink); background:#f5f6f7; }
+  header { background:#17191c; color:#fff; padding:14px 18px; }
+  header h1 { font-size:18px; margin:0 0 3px; }
+  header .sub { font-size:13px; color:#b9bfc6; }
+  main { padding:18px; max-width:1180px; margin:0 auto; }
+  section { background:#fff; border:1px solid var(--line); border-radius:7px; padding:16px; margin-bottom:16px; }
+  h2 { font-size:16px; margin:0 0 4px; }
+  .lead { font-size:13.5px; color:var(--muted); margin:0 0 12px; }
+  .tiles { display:flex; flex-wrap:wrap; gap:12px; }
+  .tile { border:1px solid var(--line); border-radius:7px; padding:11px 13px; min-width:165px; flex:1; }
+  .tile .n { font-size:26px; font-weight:600; line-height:1.1; }
+  .tile .l { font-size:12.5px; font-weight:600; margin-top:3px; }
+  .tile .d { font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.35; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { text-align:left; padding:7px 9px; border-bottom:1px solid #eef0f2; vertical-align:top; }
+  th { font-size:11.5px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  th small { display:block; text-transform:none; letter-spacing:0; font-weight:400; font-size:11px; margin-top:2px; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .wrap { overflow-x:auto; }
+  .pill { display:inline-block; padding:1px 8px; border-radius:11px; font-size:11px; border:1px solid; white-space:nowrap; }
+  .b-over { color:var(--over); border-color:var(--over); background:#fdf1ef; }
+  .b-close { color:var(--close); border-color:var(--close); background:#fdf6ea; }
+  .b-watch { color:var(--watch); border-color:var(--watch); }
+  button { font:inherit; padding:8px 14px; border:1px solid var(--ink); background:var(--ink); color:#fff; border-radius:5px; cursor:pointer; }
+  button.ghost { background:#fff; color:var(--ink); }
+  button:disabled { opacity:.5; cursor:not-allowed; }
+  select,input[type=file] { font:inherit; padding:6px; border:1px solid var(--line); border-radius:5px; background:#fff; }
+  .row { display:flex; gap:11px; align-items:center; flex-wrap:wrap; }
+  .note { font-size:13px; color:var(--muted); }
+  .msg { padding:10px 12px; border-radius:5px; font-size:13.5px; margin-top:11px; white-space:pre-wrap; }
+  .msg.err { background:#fdeceb; border:1px solid #f0b3ae; }
+  .msg.ok { background:#eaf6ef; border:1px solid #a9d9bf; }
+  .bar { height:8px; background:#eceef0; border-radius:4px; overflow:hidden; min-width:74px; }
+  .bar > i { display:block; height:100%; background:var(--over); }
+  a { color:#1558b0; }
+  details { border-top:1px solid var(--line); margin-top:12px; padding-top:9px; }
+  details summary { cursor:pointer; font-size:13px; color:#1558b0; font-weight:600; }
+  details .body { font-size:13px; color:#33383d; margin-top:9px; line-height:1.55; }
+  details .body p { margin:0 0 9px; }
+  details .body b { color:var(--ink); }
+  code { background:#f1f2f4; padding:1px 5px; border-radius:3px; font-size:12.5px; }
+  .arrow { color:var(--muted); padding:0 5px; }
+  ol.steps { margin:0; padding-left:22px; }
+  ol.steps li { padding:7px 0; border-bottom:1px solid #f0f1f3; }
+  ol.steps li:last-child { border-bottom:none; }
+  ol.steps .note { margin-top:2px; }
+</style>
+
+<header>
+  <h1>Overtime ops room</h1>
+  <div class="sub" id="hdr">loading…</div>
+</header>
+
+<main>
+
+<section>
+  <h2>Where the week stands</h2>
+  <p class="lead">By law an employee may work 45 ordinary hours plus at most 10 hours of overtime
+    in a week — so <b>55 hours is the cap</b>. Going past it is a compliance breach.</p>
+  <div class="tiles" id="tiles"></div>
+  <details>
+    <summary>How these numbers are worked out</summary>
+    <div class="body" id="explain-top"></div>
+  </details>
+</section>
+
+<section>
+  <h2>Sites</h2>
+  <p class="lead">Where the problem is, and — from what supervisors typed on their shifts this
+    week — what is causing it.</p>
+  <div class="wrap"><table id="sites">
+    <thead><tr>
+      <th>Site</th>
+      <th class="num">Over the cap<small>projected past 55h</small></th>
+      <th class="num">Close<small>within 5h of it</small></th>
+      <th class="num">Cost<small>overtime pay for those over</small></th>
+      <th class="num">Something went wrong<small>hours, from notes</small></th>
+      <th class="num">Client asked for it<small>hours, from notes</small></th>
+      <th>Share preventable<small>left column ÷ both</small></th>
+      <th>Most common problem<small>from notes</small></th>
+    </tr></thead><tbody></tbody>
+  </table></div>
+  <details>
+    <summary>What each of these columns actually means</summary>
+    <div class="body" id="explain-sites"></div>
+  </details>
+</section>
+
+<section>
+  <h2>People to look at</h2>
+  <p class="lead" id="people-lead"></p>
+  <div class="row">
+    <label>Site <select id="fsite"><option value="">all sites</option></select></label>
+    <label>Band <select id="fband"><option value="">all bands</option></select></label>
+    <span class="note" id="count"></span>
+    <span style="flex:1"></span>
+    <a href="/api/export/predictions.csv">predictions.csv</a> · <a href="/api/export/note_classifications.csv">note_classifications.csv</a>
+  </div>
+  <div class="wrap" style="margin-top:10px"><table id="people">
+    <thead><tr>
+      <th>Employee</th><th>Site</th><th>Role</th>
+      <th>Band</th>
+      <th class="num">Worked<small>Mon–Wed</small></th>
+      <th class="num">Projected<small>by Sunday</small></th>
+      <th class="num">vs 55h</th>
+      <th class="num">Risk<small>0–1</small></th>
+      <th>Likely cause<small>from notes</small></th>
+      <th class="num">Cost</th>
+      <th>Do this</th>
+    </tr></thead><tbody></tbody>
+  </table></div>
+  <details>
+    <summary>How the projection and the risk score are worked out</summary>
+    <div class="body" id="explain-people"></div>
+  </details>
+</section>
+
+<section>
+  <h2>Today's list</h2>
+  <p class="lead">Press the button to get a list of shifts to move. Everyone receiving work is
+    checked first — same site, same job, free that day, and still under 45 hours afterwards.</p>
+  <div class="row"><button id="run">Work out today's list</button>
+    <span class="note" id="planstat"></span></div>
+  <div id="planout"></div>
+  <details>
+    <summary>How the plan is worked out, and why it sometimes says it cannot help</summary>
+    <div class="body" id="explain-plan"></div>
+  </details>
+</section>
+
+<section>
+  <h2>Load next week's export</h2>
+  <p class="lead">Drop in the same seven CSV files the client sends every Monday, or a zip of them.
+    Nothing is saved until the whole export passes its checks, so a bad file cannot damage what is
+    on screen now.</p>
+  <div class="row">
+    <input type="file" id="files" multiple accept=".csv,.zip">
+    <button class="ghost" id="up">Upload</button>
+  </div>
+  <div id="upout"></div>
+</section>
+
+<section>
+  <h2>Things to know about the data</h2>
+  <div class="note" id="quality"></div>
+  <details>
+    <summary>How much to trust any of this</summary>
+    <div class="body" id="explain-trust"></div>
+  </details>
+</section>
+
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const get = async u => { const r = await fetch(u); if (!r.ok) throw new Error(await r.text()); return r.json(); };
+const rand = n => "R" + Math.round(n).toLocaleString();
+const bandClass = b => b === "over the cap" ? "b-over" : b === "close to the line" ? "b-close" : "b-watch";
+const DAYS = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+let S = null;
+
+async function loadSummary() {
+  S = await get("/api/summary");
+  const b = S.bands, m = S.model, lastDay = DAYS[S.days_known];
+  $("#hdr").textContent =
+    `Week of ${S.week_start} · clock data runs to the end of ${lastDay} · ${S.employees} employees across 6 sites`;
+
+  $("#tiles").innerHTML = `
+    <div class="tile"><div class="n" style="color:var(--over)">${b["over the cap"]}</div>
+      <div class="l">projected over ${S.caps.breach}h</div>
+      <div class="d">These are the ones to ring today.</div></div>
+    <div class="tile"><div class="n" style="color:var(--close)">${b["close to the line"]}</div>
+      <div class="l">within 5h of the cap</div>
+      <div class="d">Not over yet. One extra shift would do it.</div></div>
+    <div class="tile"><div class="n">${rand(S.cost_at_risk)}</div>
+      <div class="l">overtime pay at stake</div>
+      <div class="d">Wage cost of the overtime for the ${b["over the cap"]} people above.</div></div>
+    <div class="tile"><div class="n">${rand(S.overtime_cost_total)}</div>
+      <div class="l">total overtime this week</div>
+      <div class="d">${S.overtime_hours_total}h across everyone, lawful or not.</div></div>`;
+
+  $("#people-lead").innerHTML =
+    `<b>Nobody has breached yet — the week is not over.</b> In ten weeks of history, no one has
+     ever been past 55 hours by a ${lastDay}. Everyone below is a forecast, and when this system
+     flags someone on a ${lastDay}, fewer than half of them actually breach. Treat it as a call
+     list in order, not a verdict.`;
+
+  $("#explain-top").innerHTML = `
+    <p><b>Projected hours</b> = the hours somebody has already clocked this week, plus the hours
+      we expect them to work over the days still to come. The second part is not a roster — the
+      client never sends one — it is built from that person's own history: if they have worked 8
+      of the last 9 Saturdays for about 9½ hours, we count roughly 8.4 hours for this Saturday.</p>
+    <p><b>Projected over 55h</b> counts only people whose projection lands past the legal cap.
+      Maybes are not in this number. People near the line are counted separately.</p>
+    <p><b>Overtime pay at stake</b> = for each of those people, the hours they are projected to
+      work above 45, multiplied by their hourly rate from the payroll file, multiplied by 1.5
+      because overtime is paid at time-and-a-half.
+      <br>Sunday and public-holiday hours are actually paid at double, but we would have to guess
+      which future hours land on a Sunday, so 1.5× is used throughout. <b>Every rand figure here
+      is therefore a floor, not an estimate.</b></p>
+    <p><b>Total overtime this week</b> is the same sum across everybody, including people who are
+      nowhere near the cap. Overtime is legal and expected — it is only a compliance problem past
+      55 hours. This tile is the wage bill; the one before it is the risk.</p>`;
+
+  $("#explain-trust").innerHTML = `
+    <p><b>The forecast is genuinely weak, and it should be read that way.</b> Tested on seven weeks
+      it had never seen, it ranks people well above chance but it is right about roughly one in
+      seven of those it flags. It is a way to spend ten minutes on the right seven people instead
+      of on all 213 — not a way to know what will happen.</p>
+    <p><b>Why it is weak is not a fixable bug.</b> Most of a breach happens after Wednesday. People
+      who ended up breaching had worked about 22 hours by Wednesday; people who looked worse — 29
+      hours by Wednesday — mostly did not breach, because their weekend turned out quiet. The same
+      visible evidence, opposite outcomes. Whatever causes a heavy weekend usually has not happened
+      yet when this page is read.</p>
+    <p><b>Waiting would help, but only by making it useless.</b> On Monday's data the ranking is
+      much worse; by Saturday it is much better and there is nothing left to change. Wednesday is
+      the trade.</p>
+    <p><b>Where not to trust it:</b> anyone with a risk score between about 0.05 and 0.20. The top
+      of the list is genuinely elevated and the bottom genuinely safe, but the middle barely
+      separates anyone.</p>`;
+
+  $("#quality").innerHTML = `
+    <p><b>${S.quality.overlapping_shift_pairs} pairs of shifts have one person clocked in at two
+      different sites at the same time.</b> Nobody can be at Sandton City and OR Tambo at once, so
+      these are capture errors — most likely relief work logged against the covering guard as well
+      as the post being covered. They inflate hours. We still count them, because the client's own
+      payroll counts them and we would rather flag the defect than quietly disagree with the
+      payslip.</p>
+    <p><b>${S.quality.missing_clock_outs} shifts never clocked out</b> and count as zero hours,
+      which is also what the client's system does. Those are real hours going uncounted, so the
+      true risk is slightly higher than this page shows.</p>`;
+
+  $("#fband").innerHTML = '<option value="">all bands</option>' +
+    Object.keys(b).filter(k => k !== "clear").map(k => `<option>${k}</option>`).join("");
+}
+
+async function loadSites() {
+  const { sites } = await get("/api/sites");
+  $("#sites").tBodies[0].innerHTML = sites.map(s => `
+    <tr>
+      <td><b>${s.site_id}</b> ${s.site_name}<div class="note">${s.province || ""} · ${s.headcount} staff</div></td>
+      <td class="num" style="color:${s.over_cap ? "var(--over)" : "inherit"}"><b>${s.over_cap}</b></td>
+      <td class="num">${s.close}</td>
+      <td class="num">${rand(s.cost_at_risk)}</td>
+      <td class="num">${s.operational_hours.toFixed(0)}h</td>
+      <td class="num">${s.client_hours.toFixed(0)}h</td>
+      <td><div class="bar"><i style="width:${((s.operational_share || 0) * 100).toFixed(0)}%"></i></div>
+        <span class="note">${s.operational_share == null ? "no notes" :
+          (s.operational_share * 100).toFixed(0) + "% of " + s.explained_hours.toFixed(0) + "h"}</span></td>
+      <td class="note">${s.main_cause || "—"}${s.main_cause_share
+        ? `<br><span style="font-size:11.5px">${(s.main_cause_share * 100).toFixed(0)}% of the problem notes</span>` : ""}</td>
+    </tr>`).join("");
+
+  $("#explain-sites").innerHTML = `
+    <p><b>The two hour columns come from what supervisors typed, not from the clock.</b> Supervisors
+      leave a free-text note against some shifts — things like <i>"scrubber broke down, had to do
+      the floor manually"</i> or <i>"client requested deep clean before the audit - approved"</i>.
+      Notes are written in a mix of English, Afrikaans and isiZulu, with plenty of typos and
+      abbreviations. Every note on a shift worked this week is sorted into a cause by matching
+      words and phrases against a list built by reading the notes themselves — no AI service is
+      involved, so the same note always gets the same answer and you can check the reasoning.</p>
+    <p><b>Something went wrong</b> adds up the hours of shifts whose note blames an operational
+      failure: relief not turning up, covering an absent colleague, a late handover, or broken
+      equipment. <b>These are hours somebody could have prevented.</b></p>
+    <p><b>Client asked for it</b> adds up the hours of shifts whose note says the client requested
+      and approved the extra work — a stocktake, an event, an extra patrol. <b>These are hours the
+      client pays for and nobody needs to fix.</b></p>
+    <p><b>Share preventable</b> is the first column divided by the two added together — so 82%
+      means that of the noted overtime hours we could attribute at that site, 82% came from
+      something going wrong and 18% was work the client asked for. The figure beside the bar tells
+      you how many hours that percentage is based on: a high share over very few hours is not much
+      to go on.</p>
+    <p>Both columns cover <b>noted hours only</b>. Supervisors mostly write when something happens —
+      only about 6% of ordinary 8–9 hour shifts carry a note, against more than half of 11–12 hour
+      shifts — so this describes the hours that ran long, not every hour worked.</p>
+    <p><b>Most common problem</b> is simply whichever operational cause appears on the most noted
+      shifts at that site this week, with the share of problem notes it accounts for. It ignores
+      client-requested work, because that is not a problem to solve.</p>
+    <p><b>Cost</b> is the overtime wage bill for that site's people who are projected past the cap
+      — hours above 45, at their own hourly rate, at time-and-a-half.</p>`;
+}
+
+async function loadPeople() {
+  const q = new URLSearchParams();
+  if ($("#fsite").value) q.set("site", $("#fsite").value);
+  if ($("#fband").value) q.set("band", $("#fband").value);
+  const { people, count } = await get("/api/risk?" + q);
+  $("#count").textContent = `showing ${count}`;
+  $("#people").tBodies[0].innerHTML = people.map(p => {
+    const over = p.overshoot > 0;
+    return `<tr>
+      <td>${p.name}<div class="note">${p.employee_id}</div></td>
+      <td>${p.site_id}</td><td class="note">${p.role}</td>
+      <td><span class="pill ${bandClass(p.band)}">${p.band}</span></td>
+      <td class="num">${p.hours_so_far.toFixed(1)}h</td>
+      <td class="num"><b>${p.projected_hours.toFixed(1)}h</b></td>
+      <td class="num" style="color:${over ? "var(--over)" : "var(--ok)"}">
+        ${over ? "+" + p.overshoot.toFixed(1) + "h over" : p.headroom.toFixed(1) + "h left"}</td>
+      <td class="num">${p.risk_score.toFixed(2)}</td>
+      <td class="note">${p.reason_label || "—"}</td>
+      <td class="num">${p.cost_at_risk ? rand(p.cost_at_risk) : "—"}</td>
+      <td class="note">${p.instruction}</td></tr>`;
+  }).join("");
+
+  $("#explain-people").innerHTML = `
+    <p><b>Worked</b> is hours actually clocked so far this week — a fact, not an estimate.
+      <b>Projected</b> adds the hours we expect over the days still to come, taken from how often
+      that person has worked each weekday in the past and how long those shifts usually run.
+      <b>vs 55h</b> is the gap between the projection and the legal cap.</p>
+    <p><b>The three bands.</b> <span class="pill b-over">over the cap</span> means the projection
+      lands past 55 hours. <span class="pill b-close">close to the line</span> means it lands
+      within 5 hours of it — one unplanned shift away. <span class="pill b-watch">worth
+      watching</span> means the projection is comfortably under, but the pattern of the week so far
+      still resembles weeks that ended in a breach.</p>
+    <p><b>Risk is a probability, not a rating.</b> 0.30 means that out of every ten people who have
+      looked like this on a Wednesday, about three went on to breach. It is deliberately not scaled
+      to look confident: the highest score in the business this week is under 0.5, and that is
+      honest rather than timid. The scores were checked against seven weeks the system had never
+      seen — among people scored around 0.17, about 14% really did breach.</p>
+    <p><b>Why the two columns can disagree.</b> Someone can be over the cap with a low risk score,
+      or the reverse. The projection is one best guess about the rest of the week; the risk score
+      also accounts for how <i>reliable</i> that guess tends to be for that kind of person. Sort by
+      whichever matches your question: projection for "who will cost the most", risk for "who
+      should I ring first".</p>
+    <p><b>Likely cause</b> comes from supervisors' notes on that person's own shifts this week. If
+      they wrote nothing, the most common cause at their site is shown instead.</p>`;
+}
+
+$("#run").onclick = async () => {
+  const btn = $("#run");
+  btn.disabled = true; btn.textContent = "Working it out…"; $("#planout").innerHTML = "";
+  try {
+    const r = await fetch("/api/plan", { method: "POST" });
+    const p = await r.json();
+    const total = p.covered + p.blocked;
+    $("#planstat").textContent = `${p.moves} shifts to move`;
+
+    const swaps = p.assignments.map(a => `
+      <li><b>Move ${a.from_name || a.from}'s ${a.day} shift</b> (${a.hours.toFixed(0)} hours)
+        <span class="arrow">→</span> give it to <b>${a.to_name || a.to}</b>
+        <div class="note">${a.to_name || a.to} will still have
+          ${a.to_room.toFixed(0)}h spare before they hit 45.</div></li>`).join("");
+
+    const decide = p.unresolved.map(u => `
+      <li><b>${u.name}</b> — ${u.overshoot.toFixed(0)} hours over.
+        <div class="note">${u.instruction}.</div></li>`).join("");
+
+    $("#planout").innerHTML = `
+      <div class="msg ok"><b>Move ${p.moves} shifts and ${p.covered} of ${total} people come back
+        under the cap</b> — about ${rand(p.cost_avoided)} of overtime you do not have to pay.
+        ${p.blocked ? `The other ${p.blocked} have no one free to take their work, so they need you.` : ""}</div>
+      ${swaps ? `<h3 style="font-size:14px;margin:16px 0 6px">Do these ${p.assignments.length} things</h3>
+        <ol class="steps">${swaps}</ol>` : ""}
+      ${decide ? `<h3 style="font-size:14px;margin:18px 0 6px">These ${p.unresolved.length} need your call</h3>
+        <ol class="steps">${decide}</ol>` : ""}`;
+    await loadPeople();
+  } catch (e) {
+    $("#planout").innerHTML = `<div class="msg err">Could not work out a list: ${e.message}</div>`;
+  }
+  btn.disabled = false; btn.textContent = "Work out today's list";
+};
+
+$("#up").onclick = async () => {
+  const input = $("#files"), out = $("#upout");
+  if (!input.files.length) { out.innerHTML = `<div class="msg err">Choose the files first.</div>`; return; }
+  const body = new FormData();
+  for (const f of input.files) body.append("files", f);
+  out.innerHTML = `<div class="msg">Checking the files…</div>`;
+  const r = await fetch("/api/upload", { method: "POST", body });
+  const d = await r.json();
+  if (!r.ok) {
+    const detail = d.detail || {};
+    out.innerHTML = `<div class="msg err"><b>${detail.message || "Upload failed."}</b>\n` +
+      (detail.problems || []).join("\n") + `</div>`;
+    return;
+  }
+  out.innerHTML = `<div class="msg ok"><b>${d.message}</b> The week shown is now ${d.week_start}, ` +
+    `and everything on this page has been worked out again.\n` +
+    Object.entries(d.rows).map(([t, n]) => `${t}: ${n.toLocaleString()} rows`).join("\n") + `</div>`;
+  $("#planstat").textContent = ""; $("#planout").innerHTML = "";
+  await refresh();
+};
+
+$("#fsite").onchange = loadPeople;
+$("#fband").onchange = loadPeople;
+
+async function refresh() {
+  await loadSummary();
+  await loadSites();
+  await loadPeople();
+  const { sites } = await get("/api/sites");
+  $("#fsite").innerHTML = '<option value="">all sites</option>' +
+    sites.map(s => `<option value="${s.site_id}">${s.site_id} — ${s.site_name}</option>`).join("");
+}
+refresh().catch(e => { $("#hdr").textContent = "Failed to load: " + e.message; });
+</script>
